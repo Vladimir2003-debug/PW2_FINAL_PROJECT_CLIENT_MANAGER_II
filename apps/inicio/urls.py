@@ -1,5 +1,5 @@
 """
-URL configuration for customer_manager project.
+URL configuration for gestion_de_clientes project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -16,13 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from.views import index,about,contact,services
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('catalogo/', include('apps.catalogo_cuentas.urls')),
-    path('', include('apps.accounts.urls')),
-    path('user/', include('apps.user.urls')),
-    path('', include('apps.inicio.urls')),
-    path('api-auth/', include('rest_framework.urls')),
-    path('admin/', admin.site.urls),
+    path('', index),
+    path('about/', about),
+    path('contact/', contact),
+    path('services/', services),
 ]
