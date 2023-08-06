@@ -12,12 +12,16 @@ from .models import (CatalogoCuentas,
                     Cuenta,
                     Banco)
                     
-from django.views.generic import View,DetailView
+from django.views.generic import View,DetailView,UpdateView,DeleteView
 from django.template.loader import get_template
 from .utils import render_to_pdf #created in step 4
 from datetime import date
 from django.contrib.auth import authenticate, login
 from apps.user.models import User
+
+from django.urls import reverse_lazy
+
+
 # Create your views here.
 
 ############################################################
@@ -27,6 +31,14 @@ class CatalogoDetailView(DetailView):
     template_name = 'view/catalogo_detail.html'
     context_object_name = 'catalogo'
     pk_url_kwarg = 'id_catalogo'
+
+class CatalogoDeleteView(DeleteView):
+    model = CatalogoCuentas
+    template_name = 'delete/catalogo_delete.html'
+    success_url = reverse_lazy('')
+    pk_url_kwarg = 'id_catalogo'
+
+    
 class ActivoDetailView(DetailView):
     model = Activo
     template_name = 'view/activo_detail.html'
@@ -48,6 +60,7 @@ def newCatalogo(request):
         pasivos = request.POST.getlist('pasivos')
         activos = request.POST.getlist('activos')
         cuentas = request.POST.getlist('cuentas')
+
         country = request.POST['country']
         type_catalogo= request.POST['type_catalogo']
         patrimonio_neto = request.POST['patrimonio_neto']
@@ -58,13 +71,18 @@ def newCatalogo(request):
         dateToday = date.today()
         name = request.POST['name']
         cliente = request.POST['cliente']
-        
+
+        print("CUENTAS")
+        print(activos)
+        print(pasivos)
+        print(cuentas)
+
         print(pasivos)
         if name is not None:
 
             contador = User.objects.get(username=request.user)
 
-            CatalogoCuentas.objects.create(
+            catalogo = CatalogoCuentas.objects.create(
                 country_id=country,
                 name=name,
                 date=dateToday,
@@ -78,12 +96,33 @@ def newCatalogo(request):
                 contador=contador.id,
             )
 
-
+            for a in activos:
+                catalogo.activos.add(a)
+            for p in pasivos:
+                catalogo.pasivos.add(p)
+            for c in cuentas:
+                catalogo.cuentas_de_orden.add(c)
+            
+            catalogo.save()
             return redirect('/user/'+str(contador.id))
 
     form = RawCatalogoForm()
+    country = Country.objects.all()
+    banco = Banco.objects.all()
+    cliente = User.objects.filter(is_cliente=True)
+
+    activos = Activo.objects.all()
+    pasivos = Pasivo.objects.all()
+    cuentas = Cuenta.objects.all()
+
     context = {
         'form': form,
+        'country':country,
+        'banco':banco,
+        'cliente':cliente,
+        'activo':activos,
+        'pasivo':pasivos,
+        'cuentas':cuentas,
     }
 
     return render(request, 'new/newCatalog.html',context) 
@@ -165,21 +204,87 @@ def newAccountForm(request):
         name_account = request.POST["name"]
         type_account = request.POST["type_account"]
         date_account = date.today()
-        mov_deudor = pasivo
-        mov_acreedor = activo
+        saldo = activo-pasivo
         
         if name_account is not None:
-            Cuenta.objects.create(date=date_account,name=name_account,type_account=type_account,pasivos=pasivo,activos=activo,mov_deudor=mov_deudor,mov_acreedor=mov_acreedor)
+            cuenta=Cuenta.objects.create(
+                date=date_account,
+                name=name_account,
+                type_account=type_account,
+                pasivos=pasivo,
+                activos=activo,
+            )
+            if saldo < 0:
+                cuenta.mov_deudor = True
+            else:
+                cuenta.mov_acreedor = True
+            cuenta.save()
+
             return redirect("/")
 
     form = RawCuentaForm()
     context = {
         'form': form,
     }
-    
     return render(request, 'new/newAccount.html',context) 
 
 ##########################################################
+# Edit 
+
+def catalogUpdate(request,myid):
+    catalogo = CatalogoCuentas.objects.get(id_catalogo=myid)
+
+    if request.method=='POST':
+        pasivos = request.POST.getlist('pasivos')
+        activos = request.POST.getlist('activos')
+        cuentas = request.POST.getlist('cuentas')
+        country = request.POST['country']
+        type_catalogo= request.POST['type_catalogo']
+        patrimonio_neto = request.POST['patrimonio_neto']
+        gastos = request.POST['gastos']
+        banco = request.POST['banco']
+        ingresos = request.POST['ingresos']
+        saldo_intermediario = request.POST['saldo_intermediario']
+        dateToday = date.today()
+        name = request.POST['name']
+        cliente = request.POST['cliente']
+
+        
+        if name is not None:
+            catalogo.country_id = country
+            catalogo.name=name
+            catalogo.type_catalog=type_catalogo
+            catalogo.banco_id=banco
+            catalogo.patrimonio_neto=patrimonio_neto
+            catalogo.gastos=gastos
+            catalogo.ingresos=ingresos
+            catalogo.saldo_intermediario=saldo_intermediario
+            catalogo.cliente=cliente
+            catalogo.date = dateToday
+            catalogo.save()
+            user = User.objects.get(username=request.user)
+            return redirect('/user/'+str(user.id))
+
+    form = RawCatalogoForm()
+
+    country = Country.objects.all()
+    banco = Banco.objects.all()
+    cliente = User.objects.filter(is_cliente=True)
+
+    catalogo = CatalogoCuentas.objects.get(id_catalogo=myid)
+
+    context = {
+        'form': form,
+        'country':country,
+        'banco':banco,
+        'cliente':cliente,
+        'catalogo':catalogo
+    }    
+    
+    return render(request, 'new/newCatalog.html', context)
+
+
+
 class GeneratePdf(View): 
     def get(self, request, *args, **kwargs):
         pdf = request.GET["pdf"]

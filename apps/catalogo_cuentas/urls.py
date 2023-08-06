@@ -8,19 +8,23 @@ from .views import (newCatalogo,
                     newActivoForm,
                     newBancoForm,
                     CatalogoDetailView,
+                    CatalogoDeleteView,
                     ActivoDetailView,
                     PasivoDetailView,
-                    GeneratePdf
+                    catalogUpdate,
+                    GeneratePdf,
                     )
 from .views import newCatalogo,newCountryForm,newPasivoForm,newActivoForm,CatalogoDetailView 
 
-from .viewsets import ActivoViewSet,PasivoViewSet,CatalogoCuentasViewSet
+from .viewsets import ActivoViewSet,PasivoViewSet,CatalogoCuentasViewSet,BancoViewSet,CountryViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'activos', ActivoViewSet)
+router.register(r'country', CountryViewSet)
 router.register(r'pasivos', PasivoViewSet)
 router.register(r'catalogo', CatalogoCuentasViewSet)
+router.register(r'banco', BancoViewSet)
 
 urlpatterns = [
     ##############################
@@ -36,12 +40,16 @@ urlpatterns = [
     path('newActivo/', newActivoForm, name = 'response'),
     path('newAccount/', newAccountForm, name = 'response'),
     path('newBank/', newBancoForm, name = 'response'),
-
-    path('catalogo/<int:pk>',CatalogoDetailView.as_view()),
+    
     path('activo/<int:pk>',ActivoDetailView.as_view()),
     path('pasivo/<int:pk>',PasivoDetailView.as_view()),
+
+
     path('<slug:id_catalogo>',CatalogoDetailView.as_view()),
     path('<slug:id_catalogo>/pdf',GeneratePdf.as_view()),
+    path('<slug:myid>/edit',catalogUpdate),
+    path('delete/slug:id_catalogo>',CatalogoDeleteView.as_view()),
     path('pdf/', GeneratePdf.as_view(),name='pdf'),
+
 ]
 

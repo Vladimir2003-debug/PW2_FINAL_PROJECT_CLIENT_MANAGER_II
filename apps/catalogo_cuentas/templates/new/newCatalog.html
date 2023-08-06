@@ -1,42 +1,258 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>new catalog</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-    />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <h2>NEW CATALOG</h2>
-      <form class="form-vertical" action="#" method="POST">{% csrf_token %}
-        {% for field in form %}
-          <div class="form-group">
-            {{ field.label_tag }} {{ field }}
-            {% if field.html_name == "country" %}<br>
-            <a class="related-widget-wrapper-link add-related" id="add_id_pasivos" data-popup="yes" href="newCountry/" title="Add another country"><img src="/static/admin/img/icon-addlink.svg" alt="Add"></a>
-            {% endif %}
-            {% if field.html_name == "banco" %}<br>
-            <a class="related-widget-wrapper-link add-related" id="add_id_pasivos" data-popup="yes" href="newBanco/" title="Add another Banco"><img src="/static/admin/img/icon-addlink.svg" alt="Add"></a>
-            {% endif %}
-            {% if field.html_name == "activos" %}<br>
-            <a class="related-widget-wrapper-link add-related" id="add_id_pasivos" data-popup="yes" href="newActivo/" title="Add another activo"><img src="/static/admin/img/icon-addlink.svg" alt="Add"></a>
-            {% endif %}
-            {% if field.html_name == "pasivos" %}<br>
-            <a class="related-widget-wrapper-link add-related" id="add_id_pasivos" data-popup="yes" href="newPasivo/" title="Add another pasivos"><img src="/static/admin/img/icon-addlink.svg" alt="Add"></a>
-            {% endif %}
-            {% if field.html_name == "cuentas_de_orden" %}<br>
-            <a class="related-widget-wrapper-link add-related" id="add_id_pasivos" data-popup="yes" href="newAccount/" title="Add another account"><img src="/static/admin/img/icon-addlink.svg" alt="Add"></a>
-            {% endif %} 
-          </div>
-        {% endfor %}
-        <input type="submit" value="Guardar"/>
-      </form>
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Colorlib Templates">
+    <meta name="author" content="Colorlib">
+    <meta name="keywords" content="Colorlib Templates">
+
+    <!-- Title Page-->
+    <title>FORM CATALOG</title>
+
+    <!-- Icons font CSS-->
+    <link href="{% static 'vendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/datepicker/daterangepicker.css' %}" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" media="all">
+</head>
+
+<body>
+    <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4">
+                <div class="card-body">
+                    <h2 class="title">Catalog Form</h2>
+                    <form method="POST" action="#">{% csrf_token %} 
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Name Catalog</label>
+                                    <input class="input--style-4" type="text" value="{{catalogo.name}}" name="name" required>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                              <div class="input-group">
+                                  <label class="label">Tipo catalog</label>
+                                  <div class="p-t-10">
+                                      <label class="radio-container m-r-45">numerico
+                                          <input type="radio" 
+                                        {% if catalogo.type_catalog == 'Numerico'%}
+                                          checked="checked" 
+                                        {% endif %}
+                                          value="Numerico" name="type_catalogo">
+                                          <span class="checkmark"></span>
+                                            </label>
+                                            <label class="radio-container">alfabetico
+                                          <input type="radio" 
+                                        {% if catalogo.type_catalog == 'Alfabetico'%}
+                                          checked="checked" 
+                                        {% endif %}
+                                          value="Alfabetico" name="type_catalogo">
+                                          <span class="checkmark"></span>
+                                      </label>
+                                      <label class="radio-container">alfanumerico
+                                          <input type="radio" 
+                                        {% if catalogo.type_catalog == 'Alfanumerico'%}
+                                          checked="checked" 
+                                        {% endif %}  
+                                          value="Alfanumerico" name="type_catalogo">
+                                          <span class="checkmark"></span>
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                        
+                        <div class="row row-space">
+                          <div class="col-2">
+                              <div class="input-group">
+                                  <label class="label">Country</label>
+                                  <div class="rs-select2 js-select-simple select--no-search">
+                                      <select name="country">
+                                      {% for country in country%}
+                                          <option disabled="disabled" 
+                                          >Choose Country</option>
+                                          <option 
+                                          {% if country.id_country == catalogo.id_country%}
+                                          selected="selected"
+                                          {% endif %}
+
+                                          value="{{country.id_country}}">{{ country.name }}</option>
+                                      {% endfor %}
+                                      </select>
+                                      <div class="select-dropdown"></div>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-2">
+                              <div class="input-group">
+                                <label class="label">Bank</label>
+                                <div class="rs-select2 js-select-simple select--no-search">
+                                    <select name="banco">
+                                    {% for banco in banco%}
+                                        <option disabled="disabled" selected="selected">Choose Bank</option>
+                                        <option 
+                                          {% if banco.id_bank == catalogo.id_bank %}
+                                          selected="selected"
+                                          {% endif %}
+                                        value="{{ banco.id_bank }}">{{ banco.name_bank }}</option>
+                                    {% endfor %}
+                                    </select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Gastos</label>
+                                    <input class="input--style-4" type="number"value="{{catalogo.gastos}}" name="gastos" required>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                              <div class="input-group">
+                                  <label class="label">Ingresos</label>
+                                  <input class="input--style-4" type="number" value="{{ catalogo.ingresos }}" name="ingresos" required>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Patrimonio Neto</label>
+                                    <input class="input--style-4" type="number" value="{{ catalogo.patrimonio_neto }}"  name="patrimonio_neto">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Saldo Intermediario</label>
+                                    <input class="input--style-4" type="number"  value="{{ catalogo.saldo_intermediario }}" name="saldo_intermediario">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                              <label class="label">Cliente</label>
+                              <div class="rs-select2 js-select-simple select--no-search">
+                                  <select name="cliente">
+                                  {% for cliente in cliente %}
+                                      <option disabled="disabled" selected="selected">Choose Client</option>
+                                      <option 
+                                        {% if cliente.id == catalogo.cliente%}
+                                        selected="selected"
+                                        {% endif %}
+                                      value="{{ cliente.id }}">{{ cliente.username }}</option>
+                                  {% endfor %}
+                                  </select>
+                                  <div class="select-dropdown"></div>
+                              </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">ACTIVOS</label>
+                                    <div class="p-t-10">
+                                    {% for activo in activo %}
+                                        <label class="radio-container m-r-45">Type-{{ activo.type }}
+                                            <input type="checkbox" 
+                                            value="{{activo.id_activo}}" name="activos">
+                                            <span class="checkmark"></span>
+                                        </label><br>
+                                            SubType-{{ activo.subtype}}
+                                        <label class="radio-container m-r-45" >
+                                        </label><br>
+                                        <label class="radio-container m-r-45" >
+                                            Name-{{ activo.name_activo }}
+                                        </label><br>
+                                        <label class="radio-container m-r-45" >
+                                            Name-{{ activo.saldo}}
+                                        </label><br>
+                                        <br>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">PASIVOS</label>
+                                    <div class="p-t-10">
+                                    {% for pasivo in pasivo %}
+                                    <label class="radio-container m-r-45">Type-{{ pasivo.type }}
+                                        <input type="checkbox" 
+                                        value="{{activo.id_activo}}" name="pasivos">
+                                        <span class="checkmark"></span>
+                                        </label><br>
+                                        SubType-{{ pasivo.subtype}}
+                                        <label class="radio-container m-r-45" >
+                                        </label><br>
+                                        <label class="radio-container m-r-45" >
+                                        Name-{{ pasivo.name_pasivo }}
+                                        </label><br>
+                                        <label class="radio-container m-r-45" >
+                                        Name-{{ pasivo.saldo}}
+                                    </label><br>
+                                    <br>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">CUENTAS DE ORDEN</label>
+                                    <div class="p-t-10">
+                                    {% for cuenta in cuenta %}
+                                    <label class="radio-container m-r-45">Name-{{ cuenta.name}}
+                                        <input type="checkbox" 
+                                        value="{{activo.id_activo}}" name="cuentas">
+                                        <span class="checkmark"></span>
+                                        </label><br>
+                                        activos-{{ activo.subtype}}
+                                        <label class="radio-container m-r-45" >
+                                        </label><br>
+                                        <label class="radio-container m-r-45" >
+                                        pasivos-{{ activo.name_activo }}
+                                        </label><br>
+                                        <label class="radio-container m-r-45" >
+                                        saldo-{{ activo.saldo}}
+                                    </label><br>
+                                    <br>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-t-15">
+                            <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </body>
+
+    <!-- Jquery JS-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <!-- Vendor JS-->
+    <script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+    <script src="{% static 'vendor/datepicker/moment.min.js' %}"></script>
+    <script src="{% static 'vendor/datepicker/daterangepicker.js' %}"></script>
+
+    <!-- Main JS-->
+    <script src="{% static 'js/global.js' %}"></script>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
 </html>
+<!-- end document-->
