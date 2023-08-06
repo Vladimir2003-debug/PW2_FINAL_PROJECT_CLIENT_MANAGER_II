@@ -21,6 +21,8 @@ def user_directory_path(instance, filename):
     return "user_{0}/{1}".format(instance.user.id, filename)
 
 class User(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
     phone_number = models.IntegerField(default=0)
     country = models.CharField(max_length=100,default="Peru")
     address = models.CharField(max_length=100)

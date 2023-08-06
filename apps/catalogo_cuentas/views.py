@@ -57,8 +57,9 @@ def newCatalogo(request):
         saldo_intermediario = request.POST['saldo_intermediario']
         dateToday = date.today()
         name = request.POST['name']
-        cliente = request.POST.getlist('cliente')
-
+        cliente = request.POST['cliente']
+        
+        print(pasivos)
         if name is not None:
 
             contador = User.objects.get(username=request.user)
@@ -73,11 +74,12 @@ def newCatalogo(request):
                 gastos=gastos,
                 ingresos=ingresos,
                 saldo_intermediario=saldo_intermediario,
-                cliente=contador.id,
+                cliente=cliente,
                 contador=contador.id,
             )
-            
-            return redirect('/')
+
+
+            return redirect('/user/'+str(contador.id))
 
     form = RawCatalogoForm()
     context = {

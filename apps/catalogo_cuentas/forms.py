@@ -1,6 +1,7 @@
 from .models import Cuenta,Activo,Pasivo,Country,Banco,TypeAccount,SubTypeAccount
 from django import forms
 from django.utils.safestring import mark_safe
+from apps.user.models import User
 
 TYPE_CATALOG_CHOICES = (
     ('Numerico','Numerico'),
@@ -16,6 +17,11 @@ TYPE_ACCOUNT_CHOICES = {
 }
 
 class RawCatalogoForm(forms.Form):
+    cliente = forms.ModelChoiceField(
+            queryset=User.objects.filter(is_cliente=True),
+            required=True,
+            empty_label="Selecciona cliente",
+    )
     type_catalogo = forms.ChoiceField(
         choices = TYPE_CATALOG_CHOICES,
         widget= forms.RadioSelect(

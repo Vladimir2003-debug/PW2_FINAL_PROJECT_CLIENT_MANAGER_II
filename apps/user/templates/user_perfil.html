@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>profile with data and skills - Bootdey.com</title>
+    <title>profile with data </title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
@@ -19,11 +19,10 @@
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">HOME</a></li>
             <li class="breadcrumb-item active" aria-current="page">
-              {% if user.is_contador %}
-              <p>CONTADOR<p>
-              {% endif %}
-              {% if user.is_cliente_id%}
-              <p>CLIENTE<p>
+              {% if user.is_contador and not user.is_cliente  %}
+              CONTADOR
+              {% else %}
+              CLIENTE
               {% endif %}
             </li>
             <li class="breadcrumb-item"><a href="/delete/">DELETE THIS PROFILE</a></li>
@@ -36,8 +35,8 @@
               <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
                   <img
-                    src="../media/{{ user.image_perfil }}"
-                    alt="Admin"
+                    src="{% static 'img/user.png' %}" 
+                    alt=""
                     class="rounded-circle"
                     width="150"
                   />
@@ -244,12 +243,22 @@
                       target="__blank"
                       href="/catalogo/{{ catalogo.id_catalogo }}"
                     >VIEW</a>
+                    {% if user.is_contador %}
+                    <a
+                      class="btn btn-info"
+                      target="__blank"
+                      href="/catalogo/{{ catalogo.id_catalogo }}"
+                    >EDIT</a>
+                    <a
+                      class="btn btn-info"
+                      target="__blank"
+                      href="/catalogo/{{ catalogo.id_catalogo }}"
+                    >DELETE</a>
+                    {% endif %}
                   </div>
                 </div>
-              </div>
-              
+              </div>    
               {% endfor %}
-
             </div>
             {% if user.is_contador %}
             <div class="col-sm-12">
@@ -266,10 +275,10 @@
     </div>
     <script
       data-cfasync="false"
-      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+      src="{% static '/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"
     ></script>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'https://code.jquery.com/jquery-1.10.2.min.js' %}"></script>
+    <script src="{% static 'https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js' %}"></script>
     <script type="text/javascript"></script>
   </body>
 </html>

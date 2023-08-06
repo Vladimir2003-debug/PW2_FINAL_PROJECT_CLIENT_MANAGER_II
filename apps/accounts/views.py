@@ -39,7 +39,14 @@ def register(request):
         birthday = request.POST['birthday']
         phone_number = request.POST['phone_number']
         type_user = request.POST['type_user']
-    
+        gender = request.POST['gender']
+        address = request.POST['address']
+
+        print("TYPE USER")
+        print(type_user)
+        print("GENDER")
+        print(gender)
+
         if password1==password2:
             if User.objects.filter(username=username).exists():
                 messages.info(request,'Username Taken')
@@ -60,7 +67,7 @@ def register(request):
                     phone_number = phone_number,
                     perfil_image="img/user.png",
                 )
-                
+                print(type_user) 
                 if type_user == "cliente":
                     user.is_cliente = True
                 
