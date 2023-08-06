@@ -1,4 +1,6 @@
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 import uuid
 # Create your models here.
@@ -14,8 +16,9 @@ class Banco(models.Model):
 
 class Country(models.Model):
     id_country = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(blank=True,max_length=100)
+    name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
+    postal_code = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -24,17 +27,18 @@ class Cuenta(models.Model):
     type_account = models.CharField(blank=True, max_length=100)
     name = models.CharField(max_length=100)
     
-    date = models.DateField(auto_now=True )
+    date = models.DateField(auto_now=True)
+    activos = models.IntegerField(default=0)
+    pasivos = models.IntegerField(default=0)
     
-    activos = models.IntegerField(blank=True, )
-    pasivos = models.IntegerField(blank=True, )
-    
-    mov_deudor = models.IntegerField(blank=True, )
-    mov_acreedor = models.IntegerField(blank=True, )
+    saldo = models.DecimalField(default=0,max_digits=10, decimal_places=2)
+
+    mov_deudor = models.BooleanField(default=False) 
+    mov_acreedor = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name
-        
+
 class TypeAccount(models.Model):
     type_name = models.CharField(max_length=100)    
 
@@ -91,7 +95,7 @@ class CatalogoCuentas(models.Model):
 
     cliente = models.UUIDField(default=uuid.uuid4(), editable=True,blank=True)
     contador = models.UUIDField(default=uuid.uuid4(), editable=True,blank=True)
-    
+ 
     def __str__(self):
         return str(self.id_catalogo)
 

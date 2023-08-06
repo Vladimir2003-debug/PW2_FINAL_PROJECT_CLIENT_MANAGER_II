@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import ClienteDetailView,ContadorDetailView
+from .models import User
+from .views import UserDetailView
 urlpatterns = [
-    path('cliente/<slug:cliente_id>',ClienteDetailView.as_view()),
-    path('contador/<slug:contador_id>',ContadorDetailView.as_view()),
+    path('<int:pk>',UserDetailView.as_view()),
 ]

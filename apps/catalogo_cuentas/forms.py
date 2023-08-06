@@ -1,7 +1,6 @@
 from .models import Cuenta,Activo,Pasivo,Country,Banco,TypeAccount,SubTypeAccount
 from django import forms
 from django.utils.safestring import mark_safe
-from apps.user.models import ClienteProfile
 
 TYPE_CATALOG_CHOICES = (
     ('Numerico','Numerico'),
@@ -50,10 +49,10 @@ class RawCatalogoForm(forms.Form):
 
     patrimonio_neto =  forms.DecimalField()
 
-    cliente = forms.ModelChoiceField(
-            queryset=ClienteProfile.objects.all(),
-            required=False,
-    )
+    # cliente = forms.ModelChoiceField(
+    #            queryset=ClienteProfile.objects.all(),
+    #        required=False,
+    #)
 
     gastos = forms.DecimalField()
     ingresos = forms.DecimalField()

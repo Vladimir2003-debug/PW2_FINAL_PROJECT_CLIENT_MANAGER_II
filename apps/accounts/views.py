@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.models import User, auth
-from apps.user.models import ClienteProfile,ContadorProfile
+from django.contrib.auth.models import auth
+from apps.user.models import User
 from apps.catalogo_cuentas.models import Country
 # Create your views here.
 
@@ -12,20 +12,11 @@ def loginUser(request):
         password = request.POST['password']
 
         user = auth.authenticate(username=username,password=password)
-        print(user)
-        print("USER CONUT")
         if user is not None:
             auth.login(request, user)
-            if ClienteProfile.objects.filter(user_id=user.id).exists():
-                cliente = ClienteProfile.objects.get(user_id=user.id)
-                id = str(cliente.cliente_id)
-                return redirect("/?id="+id+"&profile=cliente")
-            elif ContadorProfile.objects.filter(user_id=user.id).exists():
-                contador = ContadorProfile.objects.get(user_id=user.id)
-                id = str(contador.contador_id) 
-                return redirect("/?id="+id+"&profile=contador")
 
-            return redirect("/")
+            return redirect("/") 
+
         else:
             messages.info(request,'invalid credentials')
             return redirect('login')
@@ -43,6 +34,12 @@ def register(request):
         password2 = request.POST['password2']
         email = request.POST['email']
 
+        country = request.POST['country_id']
+
+        birthday = request.POST['birthday']
+        phone_number = request.POST['phone_number']
+        type_user = request.POST['type_user']
+    
         if password1==password2:
             if User.objects.filter(username=username).exists():
                 messages.info(request,'Username Taken')
@@ -50,22 +47,30 @@ def register(request):
             elif User.objects.filter(email=email).exists():
                 messages.info(request,'Email Taken')
                 return redirect('/register/')
-            else:   
-                user = User.objects.create_user(username=username, password=password1, email=email,first_name=first_name,last_name=last_name)
-                type_user = request.POST['type_user']
-                country = request.POST['country_id']
-                print(country)
+            else:
+
+                user = User.objects.create_user(
+                    username=username,
+                    password=password1,
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    country=country,
+                    birthday=birthday,
+                    phone_number = phone_number,
+                    perfil_image="img/user.png",
+                )
+                
+                if type_user == "cliente":
+                    user.is_cliente = True
+                
+                if type_user == "contador":
+                    user.is_contador = True
+
                 user.save()
-                id = ""
-                if type_user == 'cliente':
-                    cliente = ClienteProfile.objects.create(user_id=user.id,name=username,email=email,phone_number=0,country_id=country)
-                    id = str(cliente.cliente_id)
-                else:
-                    contador = ContadorProfile.objects.create(user_id=user.id,name=username,email=email,phone_number=0,country_id=country)
-                    id = str(contador.contador_id)
                 userAuth = auth.authenticate(username=username,password=password1)
                 auth.login(request,userAuth)
-                return redirect('/?id='+id+"&profile="+type_user)
+                return redirect('/')
         
         else:
             messages.info(request,'password not matching..')    

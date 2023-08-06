@@ -17,8 +17,7 @@ from django.template.loader import get_template
 from .utils import render_to_pdf #created in step 4
 from datetime import date
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User 
-from apps.user.models import ClienteProfile,ContadorProfile
+from apps.user.models import User
 # Create your views here.
 
 ############################################################
@@ -46,8 +45,6 @@ class PasivoDetailView(DetailView):
 def newCatalogo(request):
 
     if request.method=='POST':
-
-        print(request.user)
         pasivos = request.POST.getlist('pasivos')
         activos = request.POST.getlist('activos')
         cuentas = request.POST.getlist('cuentas')
@@ -60,11 +57,12 @@ def newCatalogo(request):
         saldo_intermediario = request.POST['saldo_intermediario']
         dateToday = date.today()
         name = request.POST['name']
-        cliente = request.POST['cliente']
+        cliente = request.POST.getlist('cliente')
 
         if name is not None:
-            user = User.objects.get(username=request.user)
-            contador = ContadorProfile.objects.get(user_id=user.id)
+
+            contador = User.objects.get(username=request.user)
+
             CatalogoCuentas.objects.create(
                 country_id=country,
                 name=name,
@@ -75,10 +73,11 @@ def newCatalogo(request):
                 gastos=gastos,
                 ingresos=ingresos,
                 saldo_intermediario=saldo_intermediario,
-                cliente=cliente,
-                contador=contador.contador_id,
+                cliente=contador.id,
+                contador=contador.id,
             )
-            return redirect('/user/contador/'+str(contador.contador_id))
+            
+            return redirect('/')
 
     form = RawCatalogoForm()
     context = {

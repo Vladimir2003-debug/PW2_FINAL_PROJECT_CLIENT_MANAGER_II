@@ -91,15 +91,9 @@ https://templatemo.com/tm-545-finance-business
               <li class="nav-item">
                 <a class="nav-link" href="logout/">LOGOUT</a>
               </li>
-                {% if request.GET.profile == "cliente" %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="user/cliente/{{ request.GET.id }}"><img src="{% static 'user/img/user.png' %}" style="float:left;width:40px;height:40px;"></a>
-                  </li>
-                {% else %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="user/contador/{{ request.GET.id }}"><img src="{% static 'user/img/user.png' %}" style="float:left;width:40px;height:40px;"></a>
-                  </li>
-                {% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="user/{{ user.id }}"><img src="{% static 'user/img/user.png' %}" style="float:left;width:40px;height:40px;"></a>
+              </li>
               {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="/login/">LOGIN</a>
