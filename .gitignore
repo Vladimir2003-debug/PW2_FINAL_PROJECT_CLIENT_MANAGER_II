@@ -180,3 +180,4 @@ build/
 tests/report/
 
 migrations/
+.vscode/
