@@ -6,10 +6,9 @@
 
     <title>profile with data </title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600|Open+Sans" rel="stylesheet"> 
+	  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <link rel="stylesheet" href="{% static 'css/myStyles.css' %}">
   </head>
   <body>
@@ -247,12 +246,12 @@
                     <a
                       class="btn btn-info"
                       target="__blank"
-                      href="/catalogo/{{ catalogo.id_catalogo }}"
+                      href="/catalogo/{{ catalogo.id_catalogo }}/edit"
                     >EDIT</a>
                     <a
                       class="btn btn-info"
                       target="__blank"
-                      href="/catalogo/{{ catalogo.id_catalogo }}"
+                      href="/catalogo/delete/{{ catalogo.id_catalogo }}"
                     >DELETE</a>
                     {% endif %}
                   </div>
@@ -265,8 +264,8 @@
               <a
                 class="btn btn-info"
                 target="__blank"
-                href="/catalogo/"
-                >NEW</a>
+                href="/catalogo/{{ catalogo.id_catalogo }}"
+              >NUEVO CATALOGO</a>
             </div>
             {% endif %}
           </div>
