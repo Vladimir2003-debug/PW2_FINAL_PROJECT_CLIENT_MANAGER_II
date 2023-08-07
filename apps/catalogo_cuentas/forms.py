@@ -1,4 +1,4 @@
-from .models import Cuenta,Activo,Pasivo,Country,Banco,TypeAccount,SubTypeAccount
+from .models import Cuenta,Activo,Pasivo,Country,Banco
 from django import forms
 from django.utils.safestring import mark_safe
 from apps.user.models import User
@@ -118,27 +118,11 @@ class RawBancoForm(forms.Form):
 class RawActivoForm(forms.Form):
     name = forms.CharField()   
     saldo = forms.DecimalField()
-    type = forms.ModelChoiceField(
-            queryset=TypeAccount.objects.all(),
-            required=False,
-            empty_label="Selecciona tipo de cuenta",
-        )
-    subtype = forms.ModelChoiceField(
-            queryset=SubTypeAccount.objects.all(),
-            required=False,
-            empty_label="Selecciona subtipo de cuenta",
-        )
+    type = forms.CharField()
+    subtype = forms.CharField()
 
 class RawPasivoForm(forms.Form):
     name = forms.CharField()   
     saldo = forms.DecimalField()
-    type = forms.ModelChoiceField(
-            queryset=TypeAccount.objects.all(),
-            required=False,
-            empty_label="Selecciona tipo de cuenta",
-        )
-    subtype = forms.ModelChoiceField(
-            queryset=SubTypeAccount.objects.all(),
-            required=False,
-            empty_label="Selecciona subtipo de cuenta",
-        )
+    type = forms.CharField()
+    subtype = forms.CharField()

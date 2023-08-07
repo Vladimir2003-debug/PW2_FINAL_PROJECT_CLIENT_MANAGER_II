@@ -25,6 +25,63 @@
 
     <!-- Main CSS-->
     <link href="{% static 'css/main.css' %}" rel="stylesheet" media="all">
+
+    <!-- js -->
+    <script type="text/javascript">
+        function send(type,subtype,name_activo,saldo) {
+    
+        const url = "http://localhost:3000/catalogo/newActivo";
+
+        const data = {
+            title: title,
+            text: text,
+        };
+
+        console.log(data)
+
+        const request = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        };
+
+        fetch(url, request).then(
+            response => response.json())
+        .then(
+            data => {
+            console.log(data);
+            
+            var content = `
+                <h3 id="cTitle">TITLE:</h3>
+                <h4>${data.title}</h4>
+                <h3 id="cText">TEXT:</h3>
+                <p>${data.text}</p>
+                `;
+            document.getElementById("createNewFile").hidden = true;
+            document.getElementById("contentNewFile").innerHTML = content; 
+        }
+    ); 
+    
+    }
+/**
+ * Esto permite asociar eventos a acciones
+ */
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const type = document.querySelector('#type')
+        const subtype = document.querySelector('#subtype')
+        const name_activo = document.querySelector('#name_activo')
+        const saldo = document.querySelector('#saldo')
+    
+        document.querySelector('#create-new-activo').onsubmit = () => {
+        send(type.value,subtype.value,name_activo.value,saldo.value)
+        return false;
+    }
+
+    })
+    </script>
 </head>
 
 <body>
@@ -191,7 +248,7 @@
                                     {% for pasivo in pasivo %}
                                     <label class="radio-container m-r-45">Type-{{ pasivo.type }}
                                         <input type="checkbox" 
-                                        value="{{activo.id_activo}}" name="pasivos">
+                                        value="{{pasivo.id_pasivo}}" name="pasivos">
                                         <span class="checkmark"></span>
                                         </label><br>
                                         SubType-{{ pasivo.subtype}}
@@ -215,17 +272,17 @@
                                     {% for cuenta in cuenta %}
                                     <label class="radio-container m-r-45">Name-{{ cuenta.name}}
                                         <input type="checkbox" 
-                                        value="{{activo.id_activo}}" name="cuentas">
+                                        value="{{ cuenta.id_cuenta}}" name="cuentas">
                                         <span class="checkmark"></span>
                                         </label><br>
-                                        activos-{{ activo.subtype}}
+                                        activos-{{ cuenta.subtype}}
                                         <label class="radio-container m-r-45" >
                                         </label><br>
                                         <label class="radio-container m-r-45" >
-                                        pasivos-{{ activo.name_activo }}
+                                        pasivos-{{ cuenta.name_cuenta }}
                                         </label><br>
                                         <label class="radio-container m-r-45" >
-                                        saldo-{{ activo.saldo}}
+                                        saldo-{{ cuenta.saldo}}
                                     </label><br>
                                     <br>
                                     {% endfor %}
@@ -236,6 +293,27 @@
                         <div class="p-t-15">
                             <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
                         </div>
+                    </form>
+                    <form>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <h2>ACTIVOS</h2>
+                                    <form id="create-new-activo" method="POST">{% csrf_token %}
+                                        <label class="label">Type</label>
+                                        <input class="input--style-4" id="type"  type="text" name="type"><br>
+                                        <label class="label">SubType</label>
+                                        <input class="input--style-4" id="subtype"  type="text" name="subtype"><br>
+                                        <label class="label">Name</label>
+                                        <input class="input--style-4" id="name"  type="text" name="name_activo"><br>
+                                        <label class="label">Saldo</label>
+                                        <input class="input--style-4" id="saldo"  type="number" name="saldo"><br>
+                                        <button type="submit">Crear Producto</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <div>
+
                     </form>
                 </div>
             </div>

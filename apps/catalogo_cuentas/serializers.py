@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Activo,Pasivo,CatalogoCuentas, TypeAccount ,SubTypeAccount,Country,Banco,Country
+from .models import Activo,Pasivo,CatalogoCuentas ,Country,Banco,Country
 
 ############################################################################
 # SERIALIZERS

@@ -5,6 +5,35 @@ from apps.user.models import User
 from apps.catalogo_cuentas.models import Country
 # Create your views here.
 
+from django.shortcuts import render
+from django.core.mail import send_mail
+from apps.user.models import User
+# Create your views here.
+
+def sendmail(request):
+    if request.method == 'POST':
+        user = User.objects.get(username=request.user)
+
+        email = request.POST['correo']
+        asunto = request.POST['asunto']
+        message = request.POST['mensaje']
+
+        send_mail(
+            asunto,                            # Asunto del email
+            message,                           # Mensaje en el email
+            user.email,                        # El correo que envia
+            [email],                           # los correos a los que
+            fail_silently=False,
+        )
+
+        return redirect("/user/"+str(user.id))
+
+    return render(request, 'send.html')
+
+def index_view(request):
+    return render(request, 'index.html',{})
+
+
 def loginUser(request):
 
     if request.method == 'POST':
@@ -41,11 +70,7 @@ def register(request):
         type_user = request.POST['type_user']
         gender = request.POST['gender']
         address = request.POST['address']
-
-        print("TYPE USER")
-        print(type_user)
-        print("GENDER")
-        print(gender)
+        description = request.POST['description']
 
         if password1==password2:
             if User.objects.filter(username=username).exists():
@@ -66,6 +91,9 @@ def register(request):
                     birthday=birthday,
                     phone_number = phone_number,
                     perfil_image="img/user.png",
+                    address=address,
+                    description=description,
+                    gender=gender,
                 )
                 print(type_user) 
                 if type_user == "cliente":

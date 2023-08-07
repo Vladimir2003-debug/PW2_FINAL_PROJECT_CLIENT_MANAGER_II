@@ -1,4 +1,7 @@
 from django.shortcuts import (render,HttpResponse,redirect,get_object_or_404)
+from django.http import JsonResponse
+
+from django.views.decorators.http import require_POST
 from .forms import (RawCatalogoForm,
                     RawCuentaForm,
                     RawCountryForm,
@@ -12,7 +15,7 @@ from .models import (CatalogoCuentas,
                     Cuenta,
                     Banco)
                     
-from django.views.generic import View,DetailView,UpdateView,DeleteView
+from django.views.generic import View,DetailView,UpdateView,DeleteView,CreateView
 from django.template.loader import get_template
 from .utils import render_to_pdf #created in step 4
 from datetime import date
@@ -26,6 +29,7 @@ from django.urls import reverse_lazy
 
 ############################################################
 # VIEWS
+
 class CatalogoDetailView(DetailView):
     model = CatalogoCuentas
     template_name = 'view/catalogo_detail.html'
@@ -72,11 +76,6 @@ def newCatalogo(request):
         name = request.POST['name']
         cliente = request.POST['cliente']
 
-        print("CUENTAS")
-        print(activos)
-        print(pasivos)
-        print(cuentas)
-
         print(pasivos)
         if name is not None:
 
@@ -102,7 +101,33 @@ def newCatalogo(request):
                 catalogo.pasivos.add(p)
             for c in cuentas:
                 catalogo.cuentas_de_orden.add(c)
+
+
+            totalActivos = 0
+            totalPasivos= 0
+            totalAccounts = 0
+
+
+            for value in catalogo.activos.all():
+                totalActivos += value.saldo    
+
+            for value in catalogo.pasivos.all():
+                totalPasivos += value.saldo    
+
+            for value in catalogo.cuentas_de_orden.all():
+                totalAccounts += value.saldo   
             
+            catalogo.totalActivos=totalActivos
+            catalogo.totalPasivos=totalPasivos
+            catalogo.totalAccouns=totalAccounts
+            digits = [float(patrimonio_neto),float(ingresos),float(saldo_intermediario),float(totalPasivos),float(totalActivos),float(gastos),float(totalAccounts)]
+
+            saldo = 0
+
+            for i in digits:
+                saldo += i
+            catalogo.saldo = saldo
+
             catalogo.save()
             return redirect('/user/'+str(contador.id))
 
@@ -178,7 +203,10 @@ def newPasivoForm(request):
     }
     return render(request, 'new/newPasivo.html',context) 
 
+
 def newActivoForm(request):
+    print("AEA")
+    print(request)
     if request.method=='POST':
         name_activo = request.POST['name']
         saldo_activo = request.POST['saldo']
@@ -188,13 +216,8 @@ def newActivoForm(request):
         
         if name_activo is not None:
             Activo.objects.create( date=date_activo,name_activo=name_activo, saldo=saldo_activo, type=type_activo, subtype=subtype_activo)
-            return redirect('/')
     
-    form = RawActivoForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'new/newActivo.html',context) 
+    return JsonResponse({"confirm":'202'}) 
 
 def newAccountForm(request):
     if request.method == 'POST':
@@ -232,6 +255,8 @@ def newAccountForm(request):
 # Edit 
 
 def catalogUpdate(request,myid):
+
+
     catalogo = CatalogoCuentas.objects.get(id_catalogo=myid)
 
     if request.method=='POST':
@@ -261,8 +286,43 @@ def catalogUpdate(request,myid):
             catalogo.saldo_intermediario=saldo_intermediario
             catalogo.cliente=cliente
             catalogo.date = dateToday
-            catalogo.save()
+            
             user = User.objects.get(username=request.user)
+
+            for a in activos:
+                catalogo.activos.add(a)
+            for p in pasivos:
+                catalogo.pasivos.add(p)
+            for c in cuentas:
+                catalogo.cuentas_de_orden.add(c)
+
+            totalActivos = 0
+            totalPasivos= 0
+            totalAccounts = 0
+
+            for value in catalogo.activos.all():
+                totalActivos += value.saldo    
+
+            for value in catalogo.pasivos.all():
+                totalPasivos += value.saldo    
+
+            for value in catalogo.cuentas_de_orden.all():
+                totalAccounts += value.saldo   
+            
+            catalogo.totalActivos=totalActivos
+            catalogo.totalPasivos=totalPasivos
+            catalogo.totalAccouns=totalAccounts
+
+            digits = [float(patrimonio_neto),float(ingresos),float(saldo_intermediario),float(totalPasivos),float(totalActivos),float(gastos),float(totalAccounts)]
+
+            saldo = 0
+
+            for i in digits:
+                saldo += i
+
+            catalogo.saldo = saldo
+            catalogo.save()
+
             return redirect('/user/'+str(user.id))
 
     form = RawCatalogoForm()
@@ -273,12 +333,20 @@ def catalogUpdate(request,myid):
 
     catalogo = CatalogoCuentas.objects.get(id_catalogo=myid)
 
+    activos = Activo.objects.all()
+    pasivos = Pasivo.objects.all()
+    cuentas = Cuenta.objects.all()
+
+
     context = {
         'form': form,
         'country':country,
         'banco':banco,
         'cliente':cliente,
-        'catalogo':catalogo
+        'catalogo':catalogo,
+        'activo':activos,
+        'pasivo':pasivos,
+        'cuentas':cuentas,
     }    
     
     return render(request, 'new/newCatalog.html', context)

@@ -39,22 +39,12 @@ class Cuenta(models.Model):
     def __str__(self):
         return self.name
 
-class TypeAccount(models.Model):
-    type_name = models.CharField(max_length=100)    
-
-    def __str__(self):
-        return self.type_name
-class SubTypeAccount(models.Model):
-    type_name = models.CharField(max_length=100) 
-
-    def __str__(self):
-        return self.type_name
 class Pasivo(models.Model):
     id_pasivo = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateField(auto_now=True)
 
-    type = models.ForeignKey(TypeAccount, on_delete=models.CASCADE)
-    subtype = models.ForeignKey(SubTypeAccount,on_delete=models.CASCADE)
+    type = models.CharField(max_length=100,blank=True)
+    subtype = models.CharField(max_length=100, blank=True)
     
     name_pasivo = models.CharField(blank=True, max_length=100)
     saldo = models.DecimalField(blank=True,max_digits=20, decimal_places=2)
@@ -65,8 +55,8 @@ class Activo(models.Model):
     id_activo = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateField(auto_now=True )
 
-    type = models.ForeignKey(TypeAccount, on_delete=models.CASCADE)
-    subtype = models.ForeignKey(SubTypeAccount,on_delete=models.CASCADE)
+    type = models.CharField(max_length=100,blank=True)
+    subtype = models.CharField(max_length=100, blank=True)
 
     name_activo = models.CharField(blank=True, max_length=100)
     saldo = models.DecimalField(blank=True,max_digits=20, decimal_places=2)
@@ -95,7 +85,16 @@ class CatalogoCuentas(models.Model):
 
     cliente = models.UUIDField(default=uuid.uuid4(), editable=True,blank=True)
     contador = models.UUIDField(default=uuid.uuid4(), editable=True,blank=True)
- 
+
+    totalActivos = models.DecimalField(default=0 ,max_digits=20, decimal_places=2)
+    totalPasivos = models.DecimalField(default=0,max_digits=20, decimal_places=2)
+    totalAccouns = models.DecimalField(default=0,max_digits=20, decimal_places=2)
+
+    saldo = models.DecimalField(default=0,max_digits=20, decimal_places=2)
+
+
+
+
     def __str__(self):
         return str(self.id_catalogo)
 

@@ -68,3 +68,25 @@
     
 
 })(jQuery);
+
+$(document).ready(function() {
+    $('#create-new-activo').submit(function(event) {
+        event.preventDefault();
+        
+        var formData = $(this).serialize();
+        
+        $.ajax({
+            url: 'newActivo/',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                alert(response.mensaje);
+                // Realizar otras acciones después de crear el producto
+            },
+            error: function(error) {
+                alert('Error al crear el producto.');
+            }
+        });
+    });
+});

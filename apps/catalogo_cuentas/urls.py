@@ -26,6 +26,8 @@ router.register(r'pasivos', PasivoViewSet)
 router.register(r'catalogo', CatalogoCuentasViewSet)
 router.register(r'banco', BancoViewSet)
 
+app_name = "catalogo_cuentas"
+
 urlpatterns = [
     ##############################
     # 
