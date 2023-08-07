@@ -144,3 +144,26 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'user.User'
+
+
+# Email config 
+#
+
+# A partir de django 1.6+ se requiere poner esta linea de codigo 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Como se usa postfix se pude usar el local host para enviar correo
+EMAIL_HOST = 'smtp.gmail.com'
+# El port por defecto para localhost vease la documentacion de django EMAIL_PORT
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'undertaker2003.nd@gmail.com'
+EMAIL_HOST_PASSWORD = 'ljibstpejfdwjtuj'
+# Para evitar la authenticacion lo mas posible
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+GRAPH_MODELS ={
+    'all_applications': True,
+    'graph_models': True,
+}
+
