@@ -98,6 +98,7 @@
 | User | | | | | |
 | -- | -- | -- | -- | -- | -- |
 | Atributo  | Tipo  | Nulo | Clave | Predeterminado | Descripción |
+| -- | -- | -- | -- | -- | -- |
 | id  | UUID| No | Si | uuid.UUID | Código |
 | name  | Cadena| No | No | Ninguno | Nombre |
 | first_name | Cadena | No | No | Ninguno | Primer Nombre |
@@ -110,6 +111,7 @@
 
 | Banco | | | | | |
 | -- | -- | -- | -- | -- | -- |
+| Atributo  | Tipo  | Nulo | Clave | Predeterminado | Descripción |
 | id_bank  | UUID| No | Si | uuid.UUID | Código |
 | name_bank  | Cadena| No | Si | Ninguno | nombre |
 | type_bank | Cadena| No | No | Ninguno | tipo |
@@ -118,62 +120,87 @@
 
 | Country | | | | | |
 | -- | -- | -- | -- | -- | -- |
-| id_bank  | UUID| No | Si | uuid.UUID | Código |
-| name_bank  | Cadena| No | Si | Ninguno | nombre |
-| type_bank | Cadena| No | No | Ninguno | tipo |
+| Atributo  | Tipo  | Nulo | Clave | Predeterminado | Descripción |
+| id_country  | UUID| No | Si | uuid.UUID | Código |
+| name | Cadena| No | No | Ninguno | nombre |
+| description | Cadena| No | No | Ninguno | descripcion |
+| postal_code | decimal| No | No | Ninguno | codigo postal del pais |
 
 
 | Cuenta | | | | | |
 | -- | -- | -- | -- | -- | -- |
-| id_bank  | UUID| No | Si | uuid.UUID | Código |
-| name_bank  | Cadena| No | Si | Ninguno | nombre |
-| type_bank | Cadena| No | No | Ninguno | tipo |
-
+| Atributo  | Tipo  | Nulo | Clave | Predeterminado | Descripción |
+| id_cuenta  | UUID| No | Si | uuid.UUID | Código |
+| type_accountr  | Cadena| No | Si | Ninguno | el tipo de la cuenta |
+| name | Cadena| No | No | Ninguno | nombre |
+| date | fehca | No | No | Ninguno | fecha de creacion |
+| activos | Cadena| No | No | Ninguno | haber |
+| pasivos | Cadena| No | No | Ninguno | debe |
+| saldos | Cadena| No | No | Ninguno | saldo |
+| mov_deudor| Cadena| No | No | Ninguno | si el cliente tiene deuda |
+| mov_acreedor | Cadena| No | No | Ninguno | si el cliente excede su cuente |
 
 | Activo | | | | | |
 | -- | -- | -- | -- | -- | -- |
-| id_bank  | UUID| No | Si | uuid.UUID | Código |
-| name_bank  | Cadena| No | Si | Ninguno | nombre |
-| type_bank | Cadena| No | No | Ninguno | tipo |
+| Atributo  | Tipo  | Nulo | Clave | Predeterminado | Descripción |
+| id_activo  | UUID | No | Si | uuid.UUID | Código |
+| date  | fecha | No | No | Ninguno | fecha creacion |
+| type | cadena | No | No | Ninguno | typo del activo |
+| subtype | cadena | No | Si | Ninguno | sub tipo del activo |
+| name_activo | Cadena | No | Si | Ninguno | nombre |
+| saldo | decimal | No | No | Ninguno | saldo |
 
-
-| Pasivo| | | | | |
+| Activo | | | | | |
 | -- | -- | -- | -- | -- | -- |
-| id_bank  | UUID| No | Si | uuid.UUID | Código |
-| name_bank  | Cadena| No | Si | Ninguno | nombre |
-| type_bank | Cadena| No | No | Ninguno | tipo |
-
-
-| Cuenta | | | | | |
-| -- | -- | -- | -- | -- | -- |
-| id_bank  | UUID| No | Si | uuid.UUID | Código |
-| name_bank  | Cadena| No | Si | Ninguno | nombre |
-| type_bank | Cadena| No | No | Ninguno | tipo |
+| Atributo  | Tipo  | Nulo | Clave | Predeterminado | Descripción |
+| id_pasivo  | UUID | No | Si | uuid.UUID | Código |
+| date  | fecha | No | No | fecha actual | fecha creacion |
+| type | cadena | No | No | Ninguno | typo del activo |
+| subtype | cadena | No | Si | uuid.UUID | sub tipo del pasivo |
+| name_pasivo | Cadena | No | Si | Ninguno | nombre |
+| saldo | decimal | No | No | Ninguno | saldo |
 
 
 | CatalogoCuentas | | | | | |
 | -- | -- | -- | -- | -- | -- |
-| id_bank  | UUID| No | Si | uuid.UUID | Código |
-| name_bank  | Cadena| No | Si | Ninguno | nombre |
-| type_bank | Cadena| No | No | Ninguno | tipo |
+| Atributo  | Tipo  | Nulo | Clave | Predeterminado | Descripción |
+| id_catalogo  | UUID| No | No | uuid.UUID | Código |
+| country  | Cadena| No | No | Ninguno | pais del catalogo |
+| date | Cadena| No | No | fecha actual| fecha |
+| type_catalog  | cadena | No | No | Ninguno | tipo del catalogo |
+| banco  | cadena | No | No | Ninguno | Código |
+| name  | cadena | No | No | Ninguno | Código |
+| activos | activo | No | No | Ninguno | Código |
+| pasivos | pasivo | No | No | Ninguno | Código |
+| patrimonio_neto | decimal | No | Si | Ninguno | nombre |
+| gastos | decimal | No | No | Ninguno | tipo |
+| ingresos | decimal | No | No | Ninguno | nombre |
+| saldos_intermedios | decimal | No | No | Ninguno | tipo |
+| cuentas_de_orden | cuenta | No | No | Ninguno | nombre |
+| cliente | uuid| No | No | Ninguno | tipo |
+| contador | uuid| No | No | Ninguno | nombre |
+| totalActivos | decimal | No | No | Ninguno | tipo |
+| totalPasivos | decimal| No | Si | Ninguno | nombre |
+| totalAccounts| decimal| No | No | Ninguno | tipo |
 
 
 
 ##  Diagrama Entidad-Relación
-    ...
+
+<img src="./myapp_models.png">
+
 
 ##  Administración con Django
-    Se muestran los pasos realizados para crear el Proyecto, la aplicación, creacion de modelos, migraciones y habilitación del panel de administración en Django.
-    ...
+    Para la creacion del proyecto consistio en lo siguiente
+    - Elaboraicon del modelo
+    - Distribucion de las apliaciones en diferentes ramas
+    - combinar cada apliacion con su recpectivo uso hacia otras apps
+    - Usar templates en el proyecto para hacerlo mas vistoso
 
-##  Plantillas Bootstrap
-    Se seleccionó la siguiente plantilla para el usuario final (No administrador).
-
-    Demo online:
-    URL: 
-
-    Se muestran las actividades realizadas para adecuación de plantillas, vistas, formularios en Django.
-    ...
+    Problemas durante el desarrollo
+    - imposibilidad de usar ajax
+    - problemas con bases de datos (especialmente windows)
+    - retiro de uno de los compañeros 
 
 ##  CRUD - Core Business - Clientes finales
     El núcleo de negocio del sistema de inscripciones tiene valor de aceptación para los cliente finales (alumnos) radica en realizar el proceso de inscripción propiamente, que empieza desde que:
@@ -186,38 +213,42 @@
     Todas y cada una de estas pantallas debe funcionar en la plantilla bootstrap.
     A continuación se muestran las actividades realizadas para su construcción:
 
+#### USUARIO LOGEEADO
+
+<img src="img/2.png">
+<img src="img/1.png">
+
+### Registro
+
+    El registro de usuarios
+
+<img src="./img/2.png">
+
 ##  Servicios mediante una API RESTful
     Se ha creado una aplicación que pondra a disposición cierta información para ser consumida por otros clientes HTTP.
-    1. GET : Con el método get se devolverá la lista de cursos, grupos y horarios establecidos para que el alumno sobre todo vea esta información en cualquier otro medio. En formato JSON. 
-    2. POST : Con este método se enviara el código del alumno y se devolvera sus inscripciones. En formato JSON.
-    
-    Ejemplo: Prueba en Página web, aplicación móvil, PDF, etc.
-    Se especifican los pasos para crear el servicio RestFul
-    ...
+    1. GET : Con el método get se devolverá la lista de activos,pasivos y catalogos y horarios establecidos En formato JSON. 
+### ACTIVO
+<img src="img/activoapi.png">
 
-##  Operaciones asíncronas AJAX
-    Se propone el uso de AJAX para realizar la asignación de carga académica a los docentes que estan registrados. Esta operación la realizará el usuario operador encargado por el DAISI.
-    Se muestran los pasos necesarios a realizar.
-    ....
+### PASIVO
+<img src="img/pasivoapi.png">
 
 ##  Investigación: Email, Upload.
     - Email: Se utilizará la funcionalidad del uso de envío de correos electrónicos cuando el proceso de inscripciones culmine y al profesor le llegue la lista de alumnos inscritos en sus grupos a cargo.
     - Render PDF: Se utilizará esta funcionalidad para renderizar y elaborar pdfs 
 
-Github del proyecto:
+Github del proyecto: https://github.com/Vladimir2003-debug/PW2_FINAL_PROJECT_CLIENT_MANAGER
 
 
-URL Playlist YouTube.
+URL Playlist YouTube https://www.youtube.com/watch?v=CUP-erkhB6Y&list=PL7urz7GpHjq9A8sO27vdOfwXlYCZHMPNR&index=2
 Producción de un PlayList en Youtube explicando cada una de los requerimientos.
-Video 01 - Sistema - Requisitos.
-Video 02 - Modelo de datos - DD - DER.
-etc…
+Video 01 - 04 Funcionamiento de mi proyecto
+Video 05 - Explicacion modelo entidad diagrama
 
 
 ## REFERENCIAS
+- https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf
 
-
-#
 
 [license]: https://img.shields.io/github/license/rescobedoq/pw2?label=rescobedoq
 [license-file]: https://github.com/rescobedoq/pw2/blob/main/LICENSE
