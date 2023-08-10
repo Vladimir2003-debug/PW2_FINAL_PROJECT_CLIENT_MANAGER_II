@@ -48,7 +48,7 @@ urlpatterns = [
     
     
     path('<slug:id>/delete',catalogoDeleteView),
-    path('<slug:id_catalogo>',CatalogoDetailView.as_view()),
+    path('<slug:id_catalogo>/view',CatalogoDetailView.as_view()),
     path('<slug:id_catalogo>/pdf',GeneratePdf.as_view()),
     path('<slug:myid>/edit',catalogUpdate),
     path('pdf/', GeneratePdf.as_view(),name='pdf'),
