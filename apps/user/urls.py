@@ -21,8 +21,9 @@ from django.conf.urls.static import static
 
 from django.urls import path
 from .models import User
-from .views import userDetailView,deletePerfil
+from .views import userDetailView,deletePerfil,userEdit
 urlpatterns = [
     path('<slug:id>/delete/',deletePerfil),
+    path('<slug:id>/edit/',userEdit),
     path('<slug:id>',userDetailView),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -117,7 +117,7 @@ def register(request):
         context = {
             'country':queryset
             }
-
+        
         return render(request,'register.html',context)
 
 

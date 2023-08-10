@@ -26,8 +26,12 @@ class PasivoSerializer(serializers.HyperlinkedModelSerializer):
         model = Pasivo 
         fields =('date','type','subtype','name_pasivo','saldo')
 
-class CatalogoCuentasSerializer(serializers.HyperlinkedModelSerializer):
+class CatalogoCuentasSerializer(serializers.ModelSerializer):
+    country = CountrySerializer(read_only=True) 
+    banco = BancoSerializer(read_only=True) 
+    activos = ActivoSerializer(read_only=True) 
+    pasivos  = PasivoSerializer(read_only=True) 
     class Meta:
         model = CatalogoCuentas
-        fields = ['id_catalogo','country','date','type_catalog','banco','name','activos','pasivos','patrimonio_neto','gastos','ingresos','saldo_intermediario',]
+        fields = "__all__" 
 

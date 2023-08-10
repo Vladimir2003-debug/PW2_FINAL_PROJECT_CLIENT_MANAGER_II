@@ -30,6 +30,17 @@ from django.urls import reverse_lazy
 ############################################################
 # VIEWS
 
+def catalogoDeleteView(request,id):
+
+    catalogo = get_object_or_404(CatalogoCuentas,id_catalogo=id)
+    if request.method == 'POST':
+        catalogo.delete()
+        return redirect('../../')
+    context = {
+        'catalogo':catalogo
+    }
+    return render(request, 'delete/catalogo_delete.html',context)
+
 class CatalogoDetailView(DetailView):
     model = CatalogoCuentas
     template_name = 'view/catalogo_detail.html'
@@ -147,7 +158,7 @@ def newCatalogo(request):
         'cliente':cliente,
         'activo':activos,
         'pasivo':pasivos,
-        'cuentas':cuentas,
+        'cuenta':cuentas,
     }
 
     return render(request, 'new/newCatalog.html',context) 

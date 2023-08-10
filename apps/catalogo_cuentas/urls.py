@@ -14,7 +14,7 @@ from .views import (newCatalogo,
                     catalogUpdate,
                     GeneratePdf,
                     )
-from .views import newCatalogo,newCountryForm,newPasivoForm,newActivoForm,CatalogoDetailView 
+from .views import catalogoDeleteView,newCatalogo,newCountryForm,newPasivoForm,newActivoForm,CatalogoDetailView 
 
 from .viewsets import ActivoViewSet,PasivoViewSet,CatalogoCuentasViewSet,BancoViewSet,CountryViewSet
 from rest_framework import routers
@@ -45,12 +45,12 @@ urlpatterns = [
     
     path('activo/<int:pk>',ActivoDetailView.as_view()),
     path('pasivo/<int:pk>',PasivoDetailView.as_view()),
-
-
+    
+    
+    path('<slug:id>/delete',catalogoDeleteView),
     path('<slug:id_catalogo>',CatalogoDetailView.as_view()),
     path('<slug:id_catalogo>/pdf',GeneratePdf.as_view()),
     path('<slug:myid>/edit',catalogUpdate),
-    path('delete/slug:id_catalogo>',CatalogoDeleteView.as_view()),
     path('pdf/', GeneratePdf.as_view(),name='pdf'),
 
 ]
